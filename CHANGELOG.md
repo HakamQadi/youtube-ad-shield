@@ -2,6 +2,13 @@
 
 All notable changes to YouTube Ad Shield are documented here.
 
+## 1.6.1 - 2026-08-05
+
+- Redesigned the extension popup with a simpler dark UI.
+- Added the new shield/play blocked-ad icon across Chrome icon sizes.
+- Added a clickable “Powered By Hakam Qadi” footer linking to LinkedIn.
+- Kept the validated v1.6 ad-skipping engine unchanged.
+
 ## 1.6.0 - 2026-08-05
 
 ### Added

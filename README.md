@@ -1,88 +1,64 @@
-# YouTube Ad Shield
+# YouTube Ad Shield v1.6.1 — Internal Skip Action
 
-A lightweight Chrome Manifest V3 extension that automatically handles YouTube ads without using `chrome.debugger`, browser-coordinate clicks, analytics, or external servers.
+A Chrome Manifest V3 extension focused on automatically skipping YouTube ads without Chrome debugger access.
 
-> Current version: **1.6.0**
+## What changed in v1.6
 
-## Features
+v1.5 could fast-forward a skippable ad to the end, but some YouTube ads then stayed on a static advertiser end-card even though the ad video itself had finished.
 
-- Automatically activates YouTube's **Skip / Skip Ad / Skip Ads** action when available.
-- Uses YouTube page/player-level skip paths instead of Chrome debugger input.
-- Mutes and accelerates non-skippable ads while they remain non-skippable.
-- Restores the original mute, volume, and playback-speed state after the ad.
-- Removes common promoted/overlay ad UI.
-- Includes an enable/disable popup and a local handled-ad counter.
-- Works on desktop and mobile YouTube URLs declared in the manifest.
+v1.6 no longer force-seeks skippable ads. When YouTube exposes its real **Skip / Skip Ad / Skip Ads** control, v1.6 attempts the player's own skip path through several page-level strategies:
 
-## Privacy and permissions
+1. Reuse YouTube's Media Session `skipad` handler if the player registered one.
+2. Invoke a readable player method such as `skipAd()` if the current player build exposes one.
+3. Replay the exact Skip button interaction through YouTube's own event listeners. The MAIN-world bridge is installed at `document_start` and only changes the JS-visible `isTrusted` value for extension-tagged Skip replay events.
+4. Invoke an inline Skip handler if one exists.
+5. Fall back to a normal MAIN-world DOM click.
 
-The extension requests only:
+All attempts are restricted to the currently active YouTube ad player and a currently visible Skip control.
 
-```json
-"permissions": ["storage"]
-```
+## Safety rules
 
-It runs only on:
+- No `chrome.debugger` permission.
+- No Chrome debugging banner.
+- No screen-coordinate / DevTools mouse events.
+- No clicks on playlist Next controls.
+- No delayed physical click can survive an ad-to-content transition.
+- Skippable ads are **not** force-seeked to the end, preventing the v1.5 end-card stall.
+- Non-skippable ads are muted and accelerated to 16x while YouTube keeps them non-skippable.
+- Original mute, volume, and playback speed are restored after the ad.
 
-```text
-https://www.youtube.com/*
-https://m.youtube.com/*
-```
+## Permissions
 
-There is no `chrome.debugger` permission, remote code, analytics, `fetch`, XMLHttpRequest, WebSocket, or external API communication. See [PRIVACY.md](PRIVACY.md).
+Only Chrome storage is requested:
 
-## How v1.6 skips ads
+- `storage`
 
-When YouTube exposes a visible Skip control, the extension attempts the player's own skip path through page-level strategies including:
+Execution is limited to:
 
-1. A Media Session `skipad` action when YouTube exposes one.
-2. Readable player skip methods such as `skipAd()` when available.
-3. A MAIN-world event bridge installed at `document_start` that replays the exact Skip interaction through page listeners.
-4. An inline Skip handler when present.
-5. A normal MAIN-world DOM click as the last fallback.
+- `https://www.youtube.com/*`
+- `https://m.youtube.com/*`
 
-Attempts are restricted to an active YouTube ad state and a visible Skip control. There are no delayed screen-coordinate clicks that can land on playlist navigation after the ad disappears.
+## Install / update
 
-## Install locally
-
-1. Download or clone this repository.
+1. Extract the ZIP.
 2. Open `chrome://extensions`.
 3. Enable **Developer mode**.
-4. Click **Load unpacked**.
-5. Select this repository folder.
-6. Refresh open YouTube tabs.
+4. Remove the previous YouTube Ad Shield build (recommended).
+5. Click **Load unpacked**.
+6. Select the extracted `youtube-ad-shield` folder.
+7. Confirm version **1.6.1**.
+8. Refresh all open YouTube tabs.
 
-## Publish your own fork/repository
+## Expected behavior
 
-If you have the GitHub CLI installed and authenticated, this repository includes a helper:
+### Skippable ad
 
-```bash
-./publish-to-github.sh
-```
+Ad begins → Skip becomes available → extension invokes YouTube's own skip path → requested video resumes immediately.
 
-It creates a public repository named `youtube-ad-shield`, adds `origin`, and pushes the `main` branch.
+### Non-skippable ad
 
-## Validation
+Ad begins → muted + accelerated → normal playback state restored when the ad finishes.
 
-The included GitHub Actions workflow validates:
+## Technical limitation
 
-- `manifest.json` parses correctly;
-- all JavaScript files pass `node --check`;
-- the `debugger` permission has not been added.
-
-For a local check:
-
-```bash
-node -e "JSON.parse(require('fs').readFileSync('manifest.json','utf8'))"
-node --check content.js
-node --check main.js
-node --check popup.js
-```
-
-## Known limitation
-
-YouTube can change its player internals or ad markup at any time. This extension intentionally avoids the Chrome debugger API, so future YouTube changes may require updating the page-level skip integration.
-
-## License
-
-MIT. See [LICENSE](LICENSE).
+Chrome does not expose a silent extension API for creating a guaranteed OS-level trusted mouse click. v1.6 therefore works inside YouTube's MAIN JavaScript world and targets the player's own skip handling instead of using `chrome.debugger`.
