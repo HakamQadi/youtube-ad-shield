@@ -1,0 +1,19 @@
+/* YouTube Ad Shield — cosmetic cleanup only.
+   Deliberately DO NOT hide video-ad player containers or the Skip control. */
+html.ytas-enabled ytd-display-ad-renderer,
+html.ytas-enabled ytd-promoted-sparkles-web-renderer,
+html.ytas-enabled ytd-promoted-video-renderer,
+html.ytas-enabled ytd-in-feed-ad-layout-renderer,
+html.ytas-enabled ytd-ad-slot-renderer,
+html.ytas-enabled ytd-banner-promo-renderer,
+html.ytas-enabled ytd-video-masthead-ad-v3-renderer,
+html.ytas-enabled ytd-action-companion-ad-renderer,
+html.ytas-enabled ytd-companion-slot-renderer,
+html.ytas-enabled ytd-player-legacy-desktop-watch-ads-renderer,
+html.ytas-enabled #masthead-ad,
+html.ytas-enabled #player-ads,
+html.ytas-enabled #panels ytd-engagement-panel-section-list-renderer[target-id*="ads"] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
