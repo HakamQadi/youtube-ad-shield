@@ -1,0 +1,31 @@
+name: Validate extension
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate manifest JSON
+        run: node -e "JSON.parse(require('fs').readFileSync('manifest.json','utf8')); console.log('manifest.json OK')"
+      - name: Check JavaScript syntax
+        run: |
+          node --check content.js
+          node --check main.js
+          node --check popup.js
+      - name: Ensure debugger permission is absent
+        run: |
+          node - <<'NODE'
+          const m = require('./manifest.json');
+          const perms = m.permissions || [];
+          if (perms.includes('debugger')) {
+            throw new Error('debugger permission must not be present');
+          }
+          console.log('No debugger permission');
+          NODE
