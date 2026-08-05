@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YouTube Ad Shield</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <main class="card">
+    <div class="header">
+      <img src="icons/icon48.png" width="40" height="40" alt="" />
+      <div>
+        <h1>YouTube Ad Shield</h1>
+        <p>Internal YouTube Skip-Ad automation.</p>
+      </div>
+    </div>
+
+    <label class="toggle-row">
+      <span>
+        <strong>Protection</strong>
+        <small id="statusText">Enabled</small>
+      </span>
+      <input id="enabledToggle" type="checkbox" aria-label="Enable YouTube Ad Shield" />
+      <span class="switch" aria-hidden="true"></span>
+    </label>
+
+    <section class="stats" aria-label="Statistics">
+      <span>Ads handled</span>
+      <strong id="blockedCount">0</strong>
+    </section>
+
+    <button id="resetStats" type="button">Reset counter</button>
+
+    <p class="footnote">No debugger permission · no debugging banner</p>
+  </main>
+  <script src="popup.js"></script>
+</body>
+</html>
