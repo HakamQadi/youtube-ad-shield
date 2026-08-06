@@ -12,7 +12,7 @@
       <img class="brand-icon" src="icons/icon128.png" width="56" height="56" alt="" />
       <div class="brand-copy">
         <h1>Ad Shield for YouTube™</h1>
-        <p>Automatic ad skipping</p>
+        <p>Ads + creator sponsor skipping</p>
       </div>
     </header>
 
@@ -31,6 +31,25 @@
 
       <input id="enabledToggle" type="checkbox" aria-label="Enable Ad Shield for YouTube™" checked />
       <span class="switch" aria-hidden="true"></span>
+    </label>
+
+    <label class="feature-card" for="sponsorToggle">
+      <span class="feature-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M5 7h14v10H5z" />
+          <path d="m10 9.5 4.5 2.5-4.5 2.5z" />
+          <path d="m4 4 16 16" />
+        </svg>
+      </span>
+
+      <span class="feature-copy">
+        <strong>Creator sponsorships</strong>
+        <small>Auto-skip in-video sponsor segments</small>
+        <em>Community data by SponsorBlock</em>
+      </span>
+
+      <input id="sponsorToggle" type="checkbox" aria-label="Skip creator sponsorship segments" checked />
+      <span class="switch feature-switch" aria-hidden="true"></span>
     </label>
 
     <section class="stats-card" aria-label="Ad statistics">
@@ -67,6 +86,23 @@
       </span>
       <span>Works automatically on YouTube</span>
     </section>
+
+    <button id="reportAd" class="report-button" type="button">
+      <span class="report-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 3 2.8 19h18.4L12 3Z" />
+          <path d="M12 9v4.5" />
+          <path d="M12 17h.01" />
+        </svg>
+      </span>
+      <span class="report-copy">
+        <strong>Report Ad Not Skipped</strong>
+        <small>Open a pre-filled GitHub issue</small>
+      </span>
+      <svg class="report-arrow" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m9 6 6 6-6 6" />
+      </svg>
+    </button>
 
     <footer class="footer">
       <span>Powered By</span>

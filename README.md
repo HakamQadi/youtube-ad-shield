@@ -1,39 +1,54 @@
-# Ad Shield for YouTube™ v1.6.1 — Internal Skip Action
+# Ad Shield for YouTube™ v1.7.0
 
-A Chrome Manifest V3 extension focused on automatically skipping YouTube ads without Chrome debugger access.
+A Chrome Manifest V3 extension that automatically handles YouTube ads and can skip creator sponsorship segments inside videos.
 
-## What changed in v1.6
+## Features
 
-v1.5 could fast-forward a skippable ad to the end, but some YouTube ads then stayed on a static advertiser end-card even though the ad video itself had finished.
+- Automatically activates YouTube's available **Skip Ad** action.
+- Mutes and accelerates non-skippable YouTube ads.
+- Removes common promoted and overlay ad elements.
+- Restores the user's mute, volume, and playback speed after an ad.
+- **Creator sponsorship skipping** using SponsorBlock community segment data.
+- Creator sponsorship skipping can be enabled or disabled from the popup.
+- **Report Ad Not Skipped** opens a pre-filled GitHub issue with local diagnostics for easier bug reporting.
+- Local Ads Handled statistics.
+- No `chrome.debugger` permission and no Chrome debugging banner.
+- No remote executable code.
 
-v1.6 no longer force-seeks skippable ads. When YouTube exposes its real **Skip / Skip Ad / Skip Ads** control, v1.6 attempts the player's own skip path through several page-level strategies:
+## Creator sponsorship skipping
 
-1. Reuse YouTube's Media Session `skipad` handler if the player registered one.
-2. Invoke a readable player method such as `skipAd()` if the current player build exposes one.
-3. Replay the exact Skip button interaction through YouTube's own event listeners. The MAIN-world bridge is installed at `document_start` and only changes the JS-visible `isTrusted` value for extension-tagged Skip replay events.
-4. Invoke an inline Skip handler if one exists.
-5. Fall back to a normal MAIN-world DOM click.
+When enabled, the extension checks SponsorBlock for community-submitted `sponsor` segments for the current YouTube video and automatically seeks past matching sponsor segments.
 
-All attempts are restricted to the currently active YouTube ad player and a currently visible Skip control.
+For privacy, the extension uses SponsorBlock's hash-prefix lookup: it hashes the current video ID locally and sends only the first four hexadecimal characters of the SHA-256 hash. The response is filtered locally for the current video.
 
-## Safety rules
+SponsorBlock network access is used only for segment metadata. See `PRIVACY.md` for details.
 
-- No `chrome.debugger` permission.
-- No Chrome debugging banner.
-- No screen-coordinate / DevTools mouse events.
-- No clicks on playlist Next controls.
-- No delayed physical click can survive an ad-to-content transition.
-- Skippable ads are **not** force-seeked to the end, preventing the v1.5 end-card stall.
-- Non-skippable ads are muted and accelerated to 16x while YouTube keeps them non-skippable.
-- Original mute, volume, and playback speed are restored after the ad.
+## Report Ad Not Skipped
+
+The popup contains a **Report Ad Not Skipped** button. It gathers a small set of diagnostics from the current YouTube tab and opens a GitHub issue form. Nothing is submitted automatically; the user reviews and submits the report manually.
+
+Auto-generated diagnostics include:
+
+- Extension version
+- Whether the content script/player/video were detected
+- Whether an ad was active when the report was opened
+- Whether a Skip control was visible
+- Ad engine version
+- Creator sponsor feature status
+
+The current video URL and video ID are not automatically added to the public report.
 
 ## Permissions
 
-Only Chrome storage is requested:
+Chrome permission:
 
-- `storage`
+- `storage` — stores enabled/disabled preferences and local counters.
 
-Execution is limited to:
+External host access:
+
+- `https://sponsor.ajay.app/*` — retrieves SponsorBlock sponsor-segment metadata.
+
+YouTube execution is limited to:
 
 - `https://www.youtube.com/*`
 - `https://m.youtube.com/*`
@@ -43,22 +58,19 @@ Execution is limited to:
 1. Extract the ZIP.
 2. Open `chrome://extensions`.
 3. Enable **Developer mode**.
-4. Remove the previous Ad Shield for YouTube™ build (recommended).
+4. Remove the previous Ad Shield build if needed.
 5. Click **Load unpacked**.
-6. Select the extracted `youtube-ad-shield` folder.
-7. Confirm version **1.6.1**.
+6. Select the extracted extension folder.
+7. Confirm version **1.7.0**.
 8. Refresh all open YouTube tabs.
 
-## Expected behavior
+## Ad engine safety rules
 
-### Skippable ad
+The validated v1.6 YouTube ad engine remains unchanged:
 
-Ad begins → Skip becomes available → extension invokes YouTube's own skip path → requested video resumes immediately.
-
-### Non-skippable ad
-
-Ad begins → muted + accelerated → normal playback state restored when the ad finishes.
-
-## Technical limitation
-
-Chrome does not expose a silent extension API for creating a guaranteed OS-level trusted mouse click. v1.6 therefore works inside YouTube's MAIN JavaScript world and targets the player's own skip handling instead of using `chrome.debugger`.
+- No `chrome.debugger` permission.
+- No screen-coordinate / DevTools mouse events.
+- No clicks on playlist Next controls.
+- Skippable ads are not force-seeked to the end.
+- Non-skippable ads are muted and accelerated while they remain non-skippable.
+- Original playback state is restored after the ad.
