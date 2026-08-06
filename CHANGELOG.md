@@ -2,6 +2,12 @@
 
 All notable changes to Ad Shield for YouTube™ are documented here.
 
+## Unreleased
+
+### Changed
+
+- Updated the “Powered By Hakam Qadi” footer link from LinkedIn to the developer's portfolio.
+
 ## 1.6.1 - 2026-08-05
 
 - Redesigned the extension popup with a simpler dark UI.

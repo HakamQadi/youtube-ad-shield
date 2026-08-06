@@ -46,7 +46,7 @@ The extension does not download or execute remote JavaScript or WebAssembly code
 
 ## External links
 
-The extension popup contains a user-initiated link to the developer's LinkedIn profile. No extension data is sent to LinkedIn by the extension.
+The extension popup contains a user-initiated link to the developer's portfolio. No extension data is sent to the portfolio website by the extension.
 
 ## Limited Use
 
@@ -57,6 +57,9 @@ Ad Shield for YouTube™ complies with the Chrome Web Store User Data Policy, in
 ## Contact
 
 Developer: Hakam Qadi
+
+Portfolio:
+https://hakamportfolio.netlify.app/
 
 GitHub:
 https://github.com/HakamQadi/youtube-ad-shield
