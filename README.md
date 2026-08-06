@@ -1,4 +1,4 @@
-# YouTube Ad Shield v1.6.1 — Internal Skip Action
+# Ad Shield for YouTube™ v1.6.1 — Internal Skip Action
 
 A Chrome Manifest V3 extension focused on automatically skipping YouTube ads without Chrome debugger access.
 
@@ -43,7 +43,7 @@ Execution is limited to:
 1. Extract the ZIP.
 2. Open `chrome://extensions`.
 3. Enable **Developer mode**.
-4. Remove the previous YouTube Ad Shield build (recommended).
+4. Remove the previous Ad Shield for YouTube™ build (recommended).
 5. Click **Load unpacked**.
 6. Select the extracted `youtube-ad-shield` folder.
 7. Confirm version **1.6.1**.

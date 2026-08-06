@@ -1,13 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "YouTube Ad Shield",
+  "name": "Ad Shield for YouTube™",
   "version": "1.6.1",
   "description": "Automatically activates YouTube's own Skip Ad action without debugger access or coordinate clicks.",
   "permissions": [
     "storage"
   ],
   "action": {
-    "default_title": "YouTube Ad Shield",
+    "default_title": "Ad Shield for YouTube™",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",

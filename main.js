@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  // YouTube Ad Shield v1.6.0
+  // Ad Shield for YouTube™ v1.6.0
   //
   // Goal: invoke YouTube's own Skip-Ad behavior without chrome.debugger.
   //

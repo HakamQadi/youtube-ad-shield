@@ -1,4 +1,4 @@
-/* YouTube Ad Shield — cosmetic cleanup only.
+/* Ad Shield for YouTube™ — cosmetic cleanup only.
    Deliberately DO NOT hide video-ad player containers or the Skip control. */
 html.ytas-enabled ytd-display-ad-renderer,
 html.ytas-enabled ytd-promoted-sparkles-web-renderer,

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to YouTube Ad Shield are documented here.
+All notable changes to Ad Shield for YouTube™ are documented here.
 
 ## 1.6.1 - 2026-08-05
 
