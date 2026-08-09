@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Ad Shield for YouTube™",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "Automatically handles YouTube ads and skips creator sponsorship segments using community SponsorBlock data.",
   "permissions": [
     "storage"
@@ -10,6 +10,9 @@
     "https://sponsor.ajay.app/*"
   ],
   "background": {
+    "scripts": [
+      "background.js"
+    ],
     "service_worker": "background.js"
   },
   "action": {
@@ -27,6 +30,17 @@
     "32": "icons/icon32.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "youtube-ad-shield@hakamqadi",
+      "strict_min_version": "128.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
   },
   "content_scripts": [
     {
