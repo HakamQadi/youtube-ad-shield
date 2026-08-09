@@ -1,11 +1,17 @@
 {
   "manifest_version": 3,
   "name": "Ad Shield for YouTube™",
-  "version": "1.6.1",
-  "description": "Automatically skips skippable ads and speeds up non-skippable ads on YouTube.",
+  "version": "1.7.0",
+  "description": "Automatically handles YouTube ads and skips creator sponsorship segments using community SponsorBlock data.",
   "permissions": [
     "storage"
   ],
+  "host_permissions": [
+    "https://sponsor.ajay.app/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "action": {
     "default_title": "Ad Shield for YouTube™",
     "default_popup": "popup.html",
