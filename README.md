@@ -1,6 +1,6 @@
-# Ad Shield for YouTube™ v1.7.0
+# Ad Shield for YouTube™ v1.8.0
 
-A Chrome Manifest V3 extension that automatically handles YouTube ads and can skip creator sponsorship segments inside videos.
+A cross-browser Manifest V3 extension for Chrome and Firefox that automatically handles YouTube ads and can skip creator sponsorship segments inside videos.
 
 ## Features
 
@@ -12,8 +12,21 @@ A Chrome Manifest V3 extension that automatically handles YouTube ads and can sk
 - Creator sponsorship skipping can be enabled or disabled from the popup.
 - **Report Ad Not Skipped** opens a pre-filled GitHub issue with local diagnostics for easier bug reporting.
 - Local Ads Handled statistics.
+- Chrome and Firefox support from the same codebase and manifest.
 - No `chrome.debugger` permission and no Chrome debugging banner.
 - No remote executable code.
+
+## Browser support
+
+- Chrome / Chromium browsers using Manifest V3.
+- Firefox 128 or newer. Firefox 128 added support for Manifest V3 content scripts running in the `MAIN` world, which the ad engine needs.
+
+The manifest declares both background implementations:
+
+- Chrome uses `background.service_worker`.
+- Firefox uses `background.scripts`.
+
+The extension JavaScript uses the Promise-based `browser` namespace when Firefox provides it and falls back to `chrome` on Chromium browsers.
 
 ## Creator sponsorship skipping
 
@@ -40,7 +53,7 @@ The current video URL and video ID are not automatically added to the public rep
 
 ## Permissions
 
-Chrome permission:
+Extension permission:
 
 - `storage` — stores enabled/disabled preferences and local counters.
 
@@ -53,7 +66,9 @@ YouTube execution is limited to:
 - `https://www.youtube.com/*`
 - `https://m.youtube.com/*`
 
-## Install / update
+Firefox-specific manifest metadata declares a stable Gecko extension ID and `data_collection_permissions.required: ["none"]` for AMO signing/submission.
+
+## Install / update on Chrome
 
 1. Extract the ZIP.
 2. Open `chrome://extensions`.
@@ -61,8 +76,20 @@ YouTube execution is limited to:
 4. Remove the previous Ad Shield build if needed.
 5. Click **Load unpacked**.
 6. Select the extracted extension folder.
-7. Confirm version **1.7.0**.
+7. Confirm version **1.8.0**.
 8. Refresh all open YouTube tabs.
+
+## Install temporarily on Firefox
+
+1. Extract the ZIP or clone the repository.
+2. Open `about:debugging` in Firefox.
+3. Select **This Firefox**.
+4. Click **Load Temporary Add-on**.
+5. Select `manifest.json` from the extension folder.
+6. Confirm version **1.8.0**.
+7. Refresh all open YouTube tabs.
+
+Temporary Firefox installations are removed when Firefox restarts. Distribution builds should be signed through Mozilla Add-ons (AMO) or Mozilla's self-distribution signing flow.
 
 ## Ad engine safety rules
 

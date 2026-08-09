@@ -1,6 +1,7 @@
 (() => {
   'use strict';
 
+  const extensionApi = globalThis.browser || globalThis.chrome;
   const DEFAULTS = {
     enabled: true,
     blockedCount: 0,
@@ -50,8 +51,8 @@
     cooldownRef.value = now;
 
     try {
-      const result = await chrome.storage.local.get({ [key]: 0 });
-      await chrome.storage.local.set({
+      const result = await extensionApi.storage.local.get({ [key]: 0 });
+      await extensionApi.storage.local.set({
         [key]: (result[key] || 0) + 1
       });
     } catch (_) {
@@ -147,7 +148,7 @@
     exposeEnabledState();
 
     try {
-      const result = await chrome.runtime.sendMessage({
+      const result = await extensionApi.runtime.sendMessage({
         type: 'ytas:get-sponsor-segments',
         videoId
       });
@@ -208,7 +209,7 @@
 
   async function loadSettings() {
     try {
-      const result = await chrome.storage.sync.get({
+      const result = await extensionApi.storage.sync.get({
         enabled: DEFAULTS.enabled,
         sponsorSkipEnabled: DEFAULTS.sponsorSkipEnabled
       });
@@ -223,7 +224,7 @@
     refreshVideoContext();
   }
 
-  chrome.storage.onChanged.addListener((changes, areaName) => {
+  extensionApi.storage.onChanged.addListener((changes, areaName) => {
     if (areaName !== 'sync') return;
 
     let sponsorSettingChanged = false;
@@ -244,7 +245,7 @@
     }
   });
 
-  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  extensionApi.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (message?.type !== 'ytas:get-diagnostics') return undefined;
 
     const video = getMainVideo();

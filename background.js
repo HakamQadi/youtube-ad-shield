@@ -1,6 +1,7 @@
 (() => {
   'use strict';
 
+  const extensionApi = globalThis.browser || globalThis.chrome;
   const SPONSORBLOCK_API = 'https://sponsor.ajay.app';
   const CACHE_TTL_MS = 15 * 60 * 1000;
   const cache = new Map();
@@ -108,7 +109,7 @@
     }
   }
 
-  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  extensionApi.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (message?.type !== 'ytas:get-sponsor-segments') return undefined;
 
     void fetchSponsorSegments(message.videoId)

@@ -1,6 +1,7 @@
 (() => {
   'use strict';
 
+  const extensionApi = globalThis.browser || globalThis.chrome;
   const ISSUE_URL = 'https://github.com/HakamQadi/youtube-ad-shield/issues/new';
 
   const toggle = document.getElementById('enabledToggle');
@@ -26,11 +27,11 @@
   }
 
   async function loadState() {
-    const sync = await chrome.storage.sync.get({
+    const sync = await extensionApi.storage.sync.get({
       enabled: true,
       sponsorSkipEnabled: true
     });
-    const local = await chrome.storage.local.get({ blockedCount: 0 });
+    const local = await extensionApi.storage.local.get({ blockedCount: 0 });
 
     renderEnabled(sync.enabled);
     renderSponsorEnabled(sync.sponsorSkipEnabled);
@@ -38,28 +39,28 @@
   }
 
   toggle.addEventListener('change', async () => {
-    await chrome.storage.sync.set({ enabled: toggle.checked });
+    await extensionApi.storage.sync.set({ enabled: toggle.checked });
     renderEnabled(toggle.checked);
   });
 
   sponsorToggle.addEventListener('change', async () => {
-    await chrome.storage.sync.set({ sponsorSkipEnabled: sponsorToggle.checked });
+    await extensionApi.storage.sync.set({ sponsorSkipEnabled: sponsorToggle.checked });
     renderSponsorEnabled(sponsorToggle.checked);
   });
 
   resetStats.addEventListener('click', async () => {
-    await chrome.storage.local.set({ blockedCount: 0 });
+    await extensionApi.storage.local.set({ blockedCount: 0 });
     blockedCount.textContent = '0';
   });
 
   async function getActiveTabDiagnostics() {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    const [tab] = await extensionApi.tabs.query({ active: true, currentWindow: true });
     if (!tab?.id) {
       return { contentScriptAvailable: false };
     }
 
     try {
-      const diagnostics = await chrome.tabs.sendMessage(tab.id, {
+      const diagnostics = await extensionApi.tabs.sendMessage(tab.id, {
         type: 'ytas:get-diagnostics'
       });
       return { contentScriptAvailable: true, ...(diagnostics || {}) };
@@ -75,7 +76,7 @@
   }
 
   function buildIssueBody(diagnostics) {
-    const manifest = chrome.runtime.getManifest();
+    const manifest = extensionApi.runtime.getManifest();
 
     return [
       '## What happened?',
@@ -124,14 +125,14 @@
         body: buildIssueBody(diagnostics)
       });
 
-      await chrome.tabs.create({ url: `${ISSUE_URL}?${params.toString()}` });
+      await extensionApi.tabs.create({ url: `${ISSUE_URL}?${params.toString()}` });
     } finally {
       reportAd.disabled = false;
       reportAd.classList.remove('is-loading');
     }
   });
 
-  chrome.storage.onChanged.addListener((changes, areaName) => {
+  extensionApi.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === 'local' && changes.blockedCount) {
       blockedCount.textContent = String(changes.blockedCount.newValue || 0);
     }
